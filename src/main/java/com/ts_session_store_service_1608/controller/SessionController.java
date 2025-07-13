@@ -29,14 +29,14 @@ public class SessionController {
 
     /**
      * List all active (non-revoked) sessions for a user
-     * Assumes userId and currentSessionId are passed from token context or headers
+     * Assumes userEmail and currentSessionId are passed from token context or headers
      */
     @GetMapping
     public ResponseEntity<SessionListResponse> listSessions(
-            @RequestParam String userId,
+            @RequestParam String userEmail,
             @RequestParam UUID currentSessionId
     ) {
-        SessionListResponse sessions = sessionService.listSessions(userId, currentSessionId);
+        SessionListResponse sessions = sessionService.listSessions(userEmail, currentSessionId);
         return ResponseEntity.ok(sessions);
     }
 
@@ -46,9 +46,9 @@ public class SessionController {
     @DeleteMapping("/{sessionId}")
     public ResponseEntity<InvalidateSessionResponse> invalidateSession(
             @PathVariable UUID sessionId,
-            @RequestParam String userId
+            @RequestParam String userEmail
     ) {
-        InvalidateSessionResponse result = sessionService.invalidateSession(sessionId, userId);
+        InvalidateSessionResponse result = sessionService.invalidateSession(sessionId, userEmail);
         return ResponseEntity.ok(result);
     }
 
@@ -57,10 +57,10 @@ public class SessionController {
      */
     @DeleteMapping("/others")
     public ResponseEntity<Void> invalidateOtherSessions(
-            @RequestParam String userId,
+            @RequestParam String userEmail,
             @RequestParam UUID currentSessionId
     ) {
-        sessionService.invalidateOtherSessions(userId, currentSessionId);
+        sessionService.invalidateOtherSessions(userEmail, currentSessionId);
         return ResponseEntity.noContent().build();
     }
 }
